@@ -1,0 +1,33 @@
+{
+  "name": "cs839-hack5",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@ar-js-org/ar.js": "3.4.5",
+    "@artcom/react-three-arjs": "0.5.2",
+    "@react-three/drei": "8.3.1",
+    "@react-three/fiber": "7.0.24",
+    "core-js": "3.30.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "5.0.0",
+    "three": "0.136.0"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
