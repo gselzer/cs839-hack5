@@ -1,41 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="theme-color" content="#000000" />
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <title>Multi Markers AR - Playing the Archive - CASA UCL</title>
+    <meta
+      name="description"
+      content="Multi Markers AR - Playing the Archive - CASA UCL"
+    />
+    <script src="https://aframe.io/releases/1.0.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
   </head>
-
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <script>
+      //Multi Markers WebAR-AR.js and Aframe - Playing the Archive - Connected Environment CASA-UCL
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+      //Global Variable
+      var markersURLArray = [];
+      var markersNameArray = [];
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+      AFRAME.registerComponent("markers_start", {
+        init: function () {
+          console.log("Add markers to the scene");
+
+          var sceneEl = document.querySelector("a-scene");
+
+          //list of the markers
+          for (var i = 1; i < 19; i++) {
+            var url =
+              "resources/markers/pattern-Individual_Blocks-" + i + ".patt";
+            markersURLArray.push(url);
+            markersNameArray.push("Marker_" + i);
+            console.log(url);
+          }
+
+          for (var k = 0; k < 18; k++) {
+            var markerEl = document.createElement("a-marker");
+            markerEl.setAttribute("type", "pattern");
+            markerEl.setAttribute("url", markersURLArray[k]);
+            markerEl.setAttribute("id", markersNameArray[k]);
+
+            markerEl.setAttribute("registerevents", "");
+            sceneEl.appendChild(markerEl);
+
+            //Adding text to each marker
+            var textEl = document.createElement("a-entity");
+
+            textEl.setAttribute("id", "text");
+            textEl.setAttribute("text", {
+              color: "red",
+              align: "center",
+              value: markersNameArray[k],
+              width: "5.5"
+            });
+            textEl.object3D.position.set(0, 0.7, 0);
+            textEl.object3D.rotation.set(-90, 0, 0);
+
+            markerEl.appendChild(textEl);
+          }
+        }
+      });
+
+      //Detect marker found and lost
+      AFRAME.registerComponent("registerevents", {
+        init: function () {
+          const marker = this.el;
+
+          marker.addEventListener("markerFound", () => {
+            var markerId = marker.id;
+            console.log("Marker Found: ", markerId);
+          });
+
+          marker.addEventListener("markerLost", () => {
+            var markerId = marker.id;
+            console.log("Marker Lost: ", markerId);
+          });
+        }
+      });
+    </script>
+    <a-scene
+      markers_start
+      vr-mode-ui="enabled: false"
+      color-space="sRGB"
+      renderer="gammaOutput: true"
+      embedded
+      arjs="debugUIEnabled: false; sourceType: webcam; patternRatio: 0.85; trackingMethod: best;"
+    >
+      <a-entity id="userCamera" camera>
+        <a-cursor> </a-cursor>
+      </a-entity>
+    </a-scene>
   </body>
 </html>
