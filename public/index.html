@@ -44,17 +44,62 @@
             //Adding text to each marker
             var textEl = document.createElement("a-entity");
 
-            textEl.setAttribute("id", "text");
-            textEl.setAttribute("text", {
-              color: "red",
-              align: "center",
-              value: markersNameArray[k],
-              width: "5.5"
-            });
-            textEl.object3D.position.set(0, 0.7, 0);
-            textEl.object3D.rotation.set(-90, 0, 0);
-
-            markerEl.appendChild(textEl);
+            if (k === 0) {
+              textEl.setAttribute("id", "text");
+              textEl.setAttribute("text", {
+                color: "red",
+                align: "center",
+                value: "Go Right",
+                width: "20"
+              });
+              textEl.object3D.position.set(0, 0.7, 0);
+              textEl.object3D.rotation.set(-90, 0, 0);
+              markerEl.appendChild(textEl);
+            } else if (k === 1) {
+              textEl.setAttribute("id", "text");
+              textEl.setAttribute("text", {
+                color: "red",
+                align: "center",
+                value: "Go Straight",
+                width: "20"
+              });
+              textEl.object3D.position.set(0, 0.7, 0);
+              textEl.object3D.rotation.set(-90, 0, 0);
+              markerEl.appendChild(textEl);
+            } else if (k === 2) {
+              textEl.setAttribute("id", "text");
+              textEl.setAttribute("text", {
+                color: "red",
+                align: "center",
+                value: "Go Backwards",
+                width: "20"
+              });
+              textEl.object3D.position.set(0, 0.7, 0);
+              textEl.object3D.rotation.set(-90, 0, 0);
+              markerEl.appendChild(textEl);
+            } else if (k === 3) {
+              textEl.setAttribute("id", "text");
+              textEl.setAttribute("text", {
+                color: "red",
+                align: "center",
+                value: "Go Left",
+                width: "20"
+              });
+              textEl.object3D.position.set(0, 0.7, 0);
+              textEl.object3D.rotation.set(-90, 0, 0);
+              markerEl.appendChild(textEl);
+            } else {
+              textEl.setAttribute("id", "text");
+              textEl.setAttribute("text", {
+                color: "red",
+                align: "center",
+                value: markersNameArray[k],
+                width: "20"
+              });
+              textEl.object3D.position.set(0, 0.7, 0);
+              textEl.object3D.rotation.set(-90, 0, 0);
+              markerEl.appendChild(textEl);
+            }
           }
         }
       });
