@@ -45,16 +45,12 @@
             var textEl = document.createElement("a-entity");
 
             if (k === 0) {
-              textEl.setAttribute("id", "text");
-              textEl.setAttribute("text", {
-                color: "red",
-                align: "center",
-                value: "Go Right",
-                width: "20"
-              });
-              textEl.object3D.position.set(0, 0.7, 0);
-              textEl.object3D.rotation.set(-90, 0, 0);
-              markerEl.appendChild(textEl);
+              var imageEl = document.createElement("a-image");
+              imageEl.setAttribute("src", "#my-image");
+              imageEl.setAttribute("crossorigin", "anonymous");
+              imageEl.object3D.rotation.set(90, 0, 0);
+              imageEl.setAttribute("scale", "2 2 2");
+              markerEl.appendChild(imageEl);
             } else if (k === 1) {
               textEl.setAttribute("id", "text");
               textEl.setAttribute("text", {
@@ -127,8 +123,15 @@
       color-space="sRGB"
       renderer="gammaOutput: true"
       embedded
-      arjs="debugUIEnabled: false; sourceType: webcam; patternRatio: 0.85; trackingMethod: best;"
+      arjs="debugUIEnabled: false; sourceType: webcam; patternRatio: 0.85; trackingMethod: best; matrixCodeType: 4x4_BCH_13_9_3;"
     >
+      <a-assets>
+        <img
+          id="my-image"
+          src="resources/images/tmp.jpeg"
+          crossorigin="anonymous"
+        />
+      </a-assets>
       <a-entity id="userCamera" camera>
         <a-cursor> </a-cursor>
       </a-entity>
