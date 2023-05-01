@@ -8,15 +8,120 @@
     />
     <script src="https://aframe.io/releases/1.0.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <script>
-      //Multi Markers WebAR-AR.js and Aframe - Playing the Archive - Connected Environment CASA-UCL
+    <div class="buttons" style="float: left;">
+      <select name="dests" id="dests">
+        <option disabled selected value> select an option </option>
+      </select>
+    </div>
 
+    <a-scene
+      markers_start
+      vr-mode-ui="enabled: false"
+      color-space="sRGB"
+      renderer="gammaOutput: true"
+      embedded
+      arjs="debugUIEnabled: false; sourceType: webcam; patternRatio: 0.85; trackingMethod: best; matrixCodeType: 4x4_BCH_13_9_3;"
+    >
+      <a-assets>
+        <img
+          id="arrow-left"
+          src="resources/images/arrow_left.png"
+          crossorigin="anonymous"
+        />
+        <img
+          id="arrow-right"
+          src="resources/images/arrow_right.png"
+          crossorigin="anonymous"
+        />
+        <img
+          id="here"
+          src="resources/images/here.png"
+          crossorigin="anonymous"
+        />
+        <img
+          id="which-way"
+          src="resources/images/which_way.jpg"
+          crossorigin="anonymous"
+        />
+      </a-assets>
+      <a-entity id="userCamera" camera>
+        <a-cursor> </a-cursor>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      // Number of patterns existing in the environment
+      const numPatterns = 6;
+      // Hardcoded list of room numbers
+      const destinations = ["3283", "Elevator", "SACM"];
+      // Hardcoded maps of marker_id to direction
+      const dest_dirs = [
+        [
+          "#here",
+          "#arrow-left",
+          "#here",
+          "#arrow-left",
+          "#arrow-right",
+          "#arrow-left"
+        ], // Map for first room
+        [
+          "#arrow-left",
+          "#arrow-right",
+          "#here",
+          "#arrow-left",
+          "#arrow-right",
+          "#here"
+        ], // Map for second room
+        [
+          "#arrow-left",
+          "#arrow-right",
+          "#here",
+          "#arrow-right",
+          "#here",
+          "#arrow-right"
+        ] // Map for third room
+        // Outside 1221, Outside 1263, Outside 1289
+      ];
+
+      // Multi Markers WebAR-AR.js and Aframe - Playing the Archive - Connected Environment CASA-UCL
+      window.onload = function () {
+        // Set up the selector - add an option for each desination
+        const select = document.getElementById("dests");
+        for (var i = 0; i < destinations.length; i++) {
+          var opt = document.createElement("option");
+          opt.value = destinations[i];
+          opt.innerHTML = destinations[i];
+          select.appendChild(opt);
+        }
+
+        // When the "Navigate" button is pressed...
+        document
+          .getElementById("dests")
+          .addEventListener("change", function () {
+            // ...change the UI
+            const selector = document.getElementById("dests");
+            const selection = selector.value;
+            // ...and then set the correct images for the destination
+            for (var i = 0; i < numPatterns; i++) {
+              document
+                .querySelector("a-scene")
+                .getElementsByTagName("a-marker")
+                [i].getElementsByTagName("a-image")[0]
+                .setAttribute(
+                  "src",
+                  dest_dirs[destinations.indexOf(selection)][i]
+                );
+            }
+          });
+      };
       //Global Variable
       var markersURLArray = [];
       var markersNameArray = [];
 
+      console.log("fooooo");
       AFRAME.registerComponent("markers_start", {
         init: function () {
           console.log("Add markers to the scene");
@@ -24,7 +129,7 @@
           var sceneEl = document.querySelector("a-scene");
 
           //list of the markers
-          for (var i = 1; i < 19; i++) {
+          for (var i = 1; i < numPatterns + 1; i++) {
             var url =
               "resources/markers/pattern-Individual_Blocks-" + i + ".patt";
             markersURLArray.push(url);
@@ -32,75 +137,28 @@
             console.log(url);
           }
 
-          for (var k = 0; k < 18; k++) {
+          for (var k = 0; k < numPatterns; k++) {
+            // Define marker for each pattern
             var markerEl = document.createElement("a-marker");
             markerEl.setAttribute("type", "pattern");
             markerEl.setAttribute("url", markersURLArray[k]);
             markerEl.setAttribute("id", markersNameArray[k]);
-
             markerEl.setAttribute("registerevents", "");
             sceneEl.appendChild(markerEl);
 
-            //Adding text to each marker
-            var textEl = document.createElement("a-entity");
-
-            if (k === 0) {
-              var imageEl = document.createElement("a-image");
-              imageEl.setAttribute("src", "#my-image");
-              imageEl.setAttribute("crossorigin", "anonymous");
-              imageEl.object3D.rotation.set(90, 0, 0);
-              imageEl.setAttribute("scale", "2 2 2");
-              markerEl.appendChild(imageEl);
-            } else if (k === 1) {
-              textEl.setAttribute("id", "text");
-              textEl.setAttribute("text", {
-                color: "red",
-                align: "center",
-                value: "Go Straight",
-                width: "20"
-              });
-              textEl.object3D.position.set(0, 0.7, 0);
-              textEl.object3D.rotation.set(-90, 0, 0);
-              markerEl.appendChild(textEl);
-            } else if (k === 2) {
-              textEl.setAttribute("id", "text");
-              textEl.setAttribute("text", {
-                color: "red",
-                align: "center",
-                value: "Go Backwards",
-                width: "20"
-              });
-              textEl.object3D.position.set(0, 0.7, 0);
-              textEl.object3D.rotation.set(-90, 0, 0);
-              markerEl.appendChild(textEl);
-            } else if (k === 3) {
-              textEl.setAttribute("id", "text");
-              textEl.setAttribute("text", {
-                color: "red",
-                align: "center",
-                value: "Go Left",
-                width: "20"
-              });
-              textEl.object3D.position.set(0, 0.7, 0);
-              textEl.object3D.rotation.set(-90, 0, 0);
-              markerEl.appendChild(textEl);
-            } else {
-              textEl.setAttribute("id", "text");
-              textEl.setAttribute("text", {
-                color: "red",
-                align: "center",
-                value: markersNameArray[k],
-                width: "20"
-              });
-              textEl.object3D.position.set(0, 0.7, 0);
-              textEl.object3D.rotation.set(-90, 0, 0);
-              markerEl.appendChild(textEl);
-            }
+            // Add placeholder image to each marker
+            var imageEl = document.createElement("a-image");
+            imageEl.setAttribute("src", "#which-way");
+            imageEl.setAttribute("crossorigin", "anonymous");
+            imageEl.object3D.rotation.set(-Math.PI / 2, 0, 0);
+            imageEl.setAttribute("scale", "3 3 3");
+            markerEl.appendChild(imageEl);
           }
         }
       });
 
-      //Detect marker found and lost
+      // Detect marker found and lost
+      // NB only needed for debug
       AFRAME.registerComponent("registerevents", {
         init: function () {
           const marker = this.el;
@@ -117,45 +175,5 @@
         }
       });
     </script>
-    <a-scene
-      markers_start
-      vr-mode-ui="enabled: false"
-      color-space="sRGB"
-      renderer="gammaOutput: true"
-      embedded
-      arjs="debugUIEnabled: false; sourceType: webcam; patternRatio: 0.85; trackingMethod: best; matrixCodeType: 4x4_BCH_13_9_3;"
-    >
-      <a-assets>
-        <img
-          id="my-image"
-          src="resources/images/tmp.jpeg"
-          crossorigin="anonymous"
-        />
-      </a-assets>
-      <a-entity id="userCamera" camera>
-        <a-cursor> </a-cursor>
-      </a-entity>
-    </a-scene>
-
-    <form name="form1" id="form1" action="/action_page.php">
-      Subjects:
-      <select name="subject" id="subject">
-        <option value="" selected="selected">Select subject</option>
-      </select>
-      <br /><br />
-      Topics:
-      <select name="topic" id="topic">
-        <option value="" selected="selected"
-          >Please select subject first</option
-        >
-      </select>
-      <br /><br />
-      Chapters:
-      <select name="chapter" id="chapter">
-        <option value="" selected="selected">Please select topic first</option>
-      </select>
-      <br /><br />
-      <input type="submit" value="Submit" />
-    </form>
   </body>
 </html>
